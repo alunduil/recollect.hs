@@ -1,0 +1,91 @@
+cabal-version:      3.0
+name:               recollect
+version:            0.1.0.0
+license:            MIT
+license-file:       LICENSE
+copyright:          (c) 2023 Alex Brandt
+author:             Alex Brandt
+maintainer:         alunduil@gmail.com
+stability:          alpha
+homepage:           https://github.com/alunduil/recollect.hs
+bug-reports:        https://github.com/alunduil/recollect.hs/issues
+synopsis:
+  recollect is an example of network APIs for abstract data types.
+
+description:
+  You can use recollect as an example of serving abstract data types over a
+  network API.
+
+category:           Example
+tested-with:
+  GHC ==9.2.4
+   || ==9.2.8
+   || ==9.4.5
+   || ==9.4.6
+   || ==9.4.7
+   || ==9.4.8
+   || ==9.6.2
+   || ==9.6.3
+   || ==9.8.1
+
+extra-source-files:
+  CHANGELOG.md
+  README.md
+
+source-repository head
+  type:     git
+  location: https://github.com/alunduil/recollect.hs
+
+common http-common
+  build-depends:
+    , base                  >=4.16.3.0  && <4.20
+    , bytestring            ^>=0.12.0.2
+    , mtl                   ^>=2.2.2
+    , network-uri           ^>=2.6.4.1  || ^>=2.7.0.0
+    , optparse-applicative  ^>=0.18.1.0
+    , servant-server        ^>=0.20
+    , Stack                 ^>=0.4.0
+    , stm                   ^>=2.5.3.0
+    , text                  ^>=1.2.5.0  || ^>=2.0.2   || ^>=2.1
+    , warp                  ^>=3.3.31
+
+library http-library
+  import:           http-common
+  exposed-modules:
+    Stack.Api
+    Stack.Application
+    Stack.Handlers
+    Stack.Types
+
+  other-modules:
+  build-depends:
+  hs-source-dirs:   lib/http
+  default-language: Haskell2010
+  ghc-options:      -Wall
+
+test-suite http-test
+  import:           http-common
+  type:             exitcode-stdio-1.0
+  main-is:          Main.hs
+  build-depends:
+    , hspec           ^>=2.11.4
+    , http-library
+    , servant-client  ^>=0.20
+    , tasty           ^>=1.4.3   || ^>=1.5
+    , tasty-hspec     ^>=1.2.0.4
+
+  other-modules:    Stack.ApiSpec
+  hs-source-dirs:   test/http
+  default-language: Haskell2010
+  ghc-options:      -threaded -Wall
+
+executable http
+  main-is:          Main.hs
+  build-depends:
+    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0 || ^>=4.19.0.0
+    , http-library
+    , optparse-applicative  ^>=0.18.1.0
+
+  hs-source-dirs:   bin/http
+  default-language: Haskell2010
+  ghc-options:      -threaded -Wall
